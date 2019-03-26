@@ -1,33 +1,13 @@
 const express = require('express');
 const helmet = require('helmet');
-const knex = require('knex');
-
-const knexConfig = {
-  client: 'sqlite3',
-  useNullAsDefault: true,
-  connection: {
-    filename: './data/lambda.sqlite3',
-  },
-};
-
-const db = knex(knexConfig);
+const zoosRouter = require('./router/zoos-router')
 
 const server = express();
 
 server.use(express.json());
 server.use(helmet());
 
-// endpoints here
-
-server.get('/', (req, res) => {
-  db('zoos')
-  .then(roles => {
-    res.status(200).json(roles)
-  })
-  .catch(err => {
-    res.status(500).json(err)
-  })
-})
+server.use('/api/zoos', zoosRouter);
 
 const port = 3300;
 server.listen(port, function() {
