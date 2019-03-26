@@ -15,7 +15,6 @@ const db = knex(knexConfig);
 // endpoints here
 
 // CREATE of CRUD ops
-
 router.post('/', (req, res) => {
     db('zoos')
     .insert(req.body)
@@ -41,6 +40,46 @@ router.get('/', (req, res) => {
     })
     .catch(err => {
       res.status(500).json(err)
+    })
+}) //WORKING
+
+router.get('/:id', (req, res) => {
+    const animalId = req.params.id;
+    db('zoos')
+        .where( {id: animalId} )
+        .first()
+        .then(animal => {
+            res.status(200).json(animal)
+    })
+        .catch(err => {
+            res.status(500).json(err)
+    })
+}) //WORKING
+
+//UPDATE of CRUD ops
+router.put('/:id', (req, res) => {
+    db('zoos')
+    .where( {id: req.params.id })
+    .update(req.body)
+    .then(count => {
+        count ? res.status(200).json(count) : res.status(404).json({ message: 'Record does not exist'})
+    })
+    .catch(err => {
+        res.status(500).json(err)
+    })
+
+}) //WORKING
+
+//DELETE of CRUD ops
+router.delete('/:id', (req, res) => {
+    db('zoos')
+    .where({ id: req.params.id })
+    .del()
+    .then(count => {
+        count ? res.status(204).end() : res.status(404).json({ message: 'Record does not exist'})
+    })
+    .catch(err => {
+        res.status(500).json(err)
     })
 }) //WORKING
 
